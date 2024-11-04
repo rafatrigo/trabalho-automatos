@@ -12,6 +12,7 @@ public class GenerateAutomata {
         File file = new File(filePath);
         Scanner scanner;
 
+        String holdLine = null;
         ArrayList<String> lines = new ArrayList<>();
 
         try {
@@ -20,7 +21,12 @@ public class GenerateAutomata {
 
             while (scanner.hasNextLine())
             {
-                lines.add(scanner.nextLine());
+                //Ignore comments on automata
+                holdLine = scanner.nextLine();
+
+                if(!holdLine.startsWith("#")){
+                    lines.add(holdLine);
+                }
             }
 
         } catch (FileNotFoundException e) {

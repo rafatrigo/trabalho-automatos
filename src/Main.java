@@ -4,10 +4,11 @@ import classes.GenerateAutomata;
 public class Main {
     public static void main(String[] args) {
 
-        String filePath = "src/resources/transitions3.txt";
+        String filePath = "src/resources/transitions4.txt";
 
         Automata automata = GenerateAutomata.generate(filePath);
 
-        automata.testWord("bbbbaaaabbaab");
+        //automata.testWord("aabbbbbabbaabababbababbaaaaaabbbbbbbbbbbaababb");
+        automata.testFileWords("src/resources/testfiles/test1.txt");
     }
 }
