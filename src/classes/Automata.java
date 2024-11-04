@@ -1,7 +1,10 @@
 package classes;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Automata {
     private List<State> states;
@@ -51,4 +54,24 @@ public class Automata {
 
         System.out.println("Word not accepted!!!");
     }
+
+    public void testFileWords(String testFilePath){
+        File file = new File(testFilePath);
+        Scanner scanner;
+
+        try {
+
+            scanner = new Scanner(file);
+
+            while (scanner.hasNextLine())
+            {
+                //Ignore comments on automata
+                this.testWord(scanner.nextLine());
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + testFilePath);
+        }
+    }
+
 }
