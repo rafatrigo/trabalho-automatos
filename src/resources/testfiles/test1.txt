@@ -1,4 +1,4 @@
-aabbabb
-abbaab
-bbbbb
-aabbbbbabbaabababbababbaaaaaabbbbbbbbbbbaababb
+aabb
+abbbbaabaa
+bababababababababababababababababababababababababababababababababababababababababababababababababa
+aaaaaabbbbabbbbabbbbaaaa

@@ -88,6 +88,11 @@ public class GenerateAutomata {
                 State newState = new State(line[0].charAt(0));
                 states.add(newState);
             }
+            if(!verifyStateExistence(states, line[4]))
+            {
+                State newState = new State(line[4].charAt(0));
+                states.add(newState);
+            }
 
         }
 
@@ -100,9 +105,9 @@ public class GenerateAutomata {
         for (int i = 1; i < fileLines.size(); i++) {
             String[] line = fileLines.get(i).split(";");
 
-            Transition newTransaction = new Transition(line[1].charAt(0),
+            Transition newTransaction = new Transition(line[1].charAt(0), line[2].charAt(0), line[3].charAt(0),
                     states.stream()
-                            .filter(state -> state.getLabel() == line[2].charAt(0)).findFirst().orElseThrow());
+                            .filter(state -> state.getLabel() == line[4].charAt(0)).findFirst().orElseThrow());
 
             State stateOwner = states.stream()
                     .filter(state -> state.getLabel() == line[0].charAt(0)).findFirst().orElseThrow();

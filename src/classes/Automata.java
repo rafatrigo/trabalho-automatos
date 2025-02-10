@@ -2,6 +2,7 @@ package classes;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.security.cert.TrustAnchor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -19,34 +20,66 @@ public class Automata {
         this.states = new ArrayList<>(states);
     }
 
-    public void testWord(String word)
+    public void testWord(String wordParam)
     {
-        char[] letters = word.toCharArray();
+        wordParam += "?";;
+        List<Character> queue = new ArrayList<>();
+        char[] word = wordParam.toCharArray();
 
         int stateIndex = 0;
-
-        for (int i = 0; i < letters.length; i++) {
-
-            int index = i;
-
+        int index = 0;
+        boolean emptyQueue = true;
+        while(index < word.length){
+            Transition transition;
+            int finalIndex = index;
             State actualState = states.get(stateIndex);
 
-            Transition transition = actualState.getTransitions()
-                    .stream().filter(trans -> trans.getLetter() == letters[index])
-                    .findFirst().orElse(null);
+            emptyQueue = queue.isEmpty();
+
+            if(emptyQueue){
+                transition = actualState.getTransitions()
+                        .stream()
+                        .filter(trans -> trans.getLetter() == word[finalIndex])
+                        .filter(trans -> trans.getLetterQueue() == '?')
+                        .findFirst()
+                        .orElse(null);
+            }else{
+                transition = actualState.getTransitions()
+                        .stream()
+                        .filter(trans -> trans.getLetter() == word[finalIndex])
+                        .filter(trans -> trans.getLetterQueue() == queue.getLast())
+                        .findFirst()
+                        .orElse(null);
+            }
 
             if (transition == null) {
-                System.out.println("Word not accepted!!!");
-                return;
+                transition = actualState.getTransitions()
+                        .stream()
+                        .filter(trans -> trans.getLetter() == word[finalIndex])
+                        .filter(trans -> trans.getLetterQueue() == '*')
+                        .findFirst()
+                        .orElse(null);
+
+                if(transition == null) {
+                    System.out.println("Word not accepted!!!");
+                    return;
+                }
+            }
+
+            if(transition.getLetterQueue() != '*' && transition.getLetterQueue() != '?'){
+                queue.removeLast();
+            }
+
+            if(transition.getWriteQueue() != '*'){
+                queue.add(transition.getWriteQueue());
             }
 
             stateIndex = states.indexOf(transition.getDestination());
-
+            index++;
         }
 
         boolean isFinal = states.get(stateIndex).getFinalState();
-
-        if (isFinal)
+        if (isFinal && queue.isEmpty())
         {
             System.out.println("Word accepted!!!");
             return;
