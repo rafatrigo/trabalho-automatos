@@ -7,7 +7,7 @@ public class Main {
         String filePath = "src/resources/transitions1.txt";
 
         Automata automata = GenerateAutomata.generate(filePath);
-        automata.to_debug = false;
+
         automata.testWord("bbaa");
         automata.testFileWords("src/resources/testfiles/test1.txt");
     }

@@ -29,15 +29,12 @@ public class Automata {
 
         int stateIndex = 0;
         int index = 0;
-        boolean emptyQueue = true;
         while(index < word.length){
             Transition transition;
             int finalIndex = index;
             State actualState = states.get(stateIndex);
             char word_letter = word[finalIndex];
             char queueLetterNow = queue.isEmpty() ? '?' : queue.getLast();
-
-            emptyQueue = queue.isEmpty();
 
             transition = actualState.getTransitions()
                     .stream()
@@ -55,13 +52,7 @@ public class Automata {
                         .orElse(null);
 
                 if(transition == null) {
-//                    debugIt(String.valueOf(finalIndex));
-//                    debugIt(String.valueOf(stateIndex));
-//                    debugIt(String.valueOf(emptyQueue));
-//                    debugIt(queue.toString());
-//                    states.get(stateIndex).debugTransitions();
-//                    debugIt("No transition found");
-                    System.out.println("Word not accepted no transitions found!!!");
+                    System.out.println("Word not accepted!!!");
                     return;
                 }
             }
@@ -70,11 +61,9 @@ public class Automata {
                 queue.removeLast();
             }
 
-            if(transition.getWriteQueue() != "*"){
-                for(char ch: transition.getWriteQueue().toCharArray()){
-                    if(ch != '*'){
-                        queue.add(ch);
-                    }
+            for(char ch: transition.getWriteQueue().toCharArray()){
+                if(ch != '*'){
+                    queue.add(ch);
                 }
             }
 
@@ -85,12 +74,10 @@ public class Automata {
         boolean isFinal = states.get(stateIndex).getFinalState();
         if (isFinal && queue.isEmpty())
         {
-            debugIt("Final state");
             System.out.println("Word accepted!!!");
             return;
         }
 
-        debugIt("Function ended");
         System.out.println("Word not accepted!!!");
     }
 
