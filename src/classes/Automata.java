@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class Automata {
     private List<State> states;
+    public boolean to_debug = false;
 
     Automata()
     {
@@ -33,35 +34,34 @@ public class Automata {
             Transition transition;
             int finalIndex = index;
             State actualState = states.get(stateIndex);
+            char word_letter = word[finalIndex];
+            char queueLetterNow = queue.isEmpty() ? '?' : queue.getLast();
 
             emptyQueue = queue.isEmpty();
 
-            if(emptyQueue){
-                transition = actualState.getTransitions()
-                        .stream()
-                        .filter(trans -> trans.getLetter() == word[finalIndex])
-                        .filter(trans -> trans.getLetterQueue() == '?')
-                        .findFirst()
-                        .orElse(null);
-            }else{
-                transition = actualState.getTransitions()
-                        .stream()
-                        .filter(trans -> trans.getLetter() == word[finalIndex])
-                        .filter(trans -> trans.getLetterQueue() == queue.getLast())
-                        .findFirst()
-                        .orElse(null);
-            }
+            transition = actualState.getTransitions()
+                    .stream()
+                    .filter(trans -> trans.getLetter() == word_letter)
+                    .filter(trans -> trans.getLetterQueue() == queueLetterNow)
+                    .findFirst()
+                    .orElse(null);
 
             if (transition == null) {
                 transition = actualState.getTransitions()
                         .stream()
-                        .filter(trans -> trans.getLetter() == word[finalIndex])
+                        .filter(trans -> trans.getLetter() == word_letter)
                         .filter(trans -> trans.getLetterQueue() == '*')
                         .findFirst()
                         .orElse(null);
 
                 if(transition == null) {
-                    System.out.println("Word not accepted!!!");
+//                    debugIt(String.valueOf(finalIndex));
+//                    debugIt(String.valueOf(stateIndex));
+//                    debugIt(String.valueOf(emptyQueue));
+//                    debugIt(queue.toString());
+//                    states.get(stateIndex).debugTransitions();
+//                    debugIt("No transition found");
+                    System.out.println("Word not accepted no transitions found!!!");
                     return;
                 }
             }
@@ -70,8 +70,12 @@ public class Automata {
                 queue.removeLast();
             }
 
-            if(transition.getWriteQueue() != '*'){
-                queue.add(transition.getWriteQueue());
+            if(transition.getWriteQueue() != "*"){
+                for(char ch: transition.getWriteQueue().toCharArray()){
+                    if(ch != '*'){
+                        queue.add(ch);
+                    }
+                }
             }
 
             stateIndex = states.indexOf(transition.getDestination());
@@ -81,11 +85,20 @@ public class Automata {
         boolean isFinal = states.get(stateIndex).getFinalState();
         if (isFinal && queue.isEmpty())
         {
+            debugIt("Final state");
             System.out.println("Word accepted!!!");
             return;
         }
 
+        debugIt("Function ended");
         System.out.println("Word not accepted!!!");
+    }
+
+    public void debugIt(String message){
+        if(!to_debug){
+            return;
+        }
+        System.out.println(message);
     }
 
     public void testFileWords(String testFilePath){

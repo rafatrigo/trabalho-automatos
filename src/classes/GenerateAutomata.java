@@ -105,7 +105,7 @@ public class GenerateAutomata {
         for (int i = 1; i < fileLines.size(); i++) {
             String[] line = fileLines.get(i).split(";");
 
-            Transition newTransaction = new Transition(line[1].charAt(0), line[2].charAt(0), line[3].charAt(0),
+            Transition newTransaction = new Transition(line[1].charAt(0), line[2].charAt(0), line[3],
                     states.stream()
                             .filter(state -> state.getLabel() == line[4].charAt(0)).findFirst().orElseThrow());
 

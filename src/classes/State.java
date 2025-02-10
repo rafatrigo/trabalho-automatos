@@ -51,6 +51,12 @@ public class State {
         this.finalState = finalState;
     }
 
+    public void debugTransitions(){
+        for(Transition transition : transitions){
+            transition.resumeIt();
+        }
+    }
+
     public List<Transition> getTransitions()
     {
         return this.transitions;
